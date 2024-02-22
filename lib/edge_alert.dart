@@ -10,15 +10,17 @@ class EdgeAlert {
   static final int TOP = 1;
   static final int BOTTOM = 2;
 
-  static void show(BuildContext context,
-      {String title,
-      String description,
-      int duration,
-      int gravity,
-      Color backgroundColor,
-      IconData icon}) {
+  static void show(
+    BuildContext context, {
+    String? title,
+    Color? backgroundColor,
+    IconData? icon,
+    String? description,
+    int? duration,
+    int? gravity,
+  }) {
     OverlayView.createView(context,
-        title: title,
+        title: title ?? '',
         description: description,
         duration: duration,
         gravity: gravity,
@@ -36,18 +38,18 @@ class OverlayView {
 
   OverlayView._internal();
 
-  static OverlayState _overlayState;
-  static OverlayEntry _overlayEntry;
+  static OverlayState? _overlayState;
+  static OverlayEntry? _overlayEntry;
   static bool _isVisible = false;
 
   static void createView(BuildContext context,
-      {String title,
-      String description,
-      int duration,
-      int gravity,
-      Color backgroundColor,
-      IconData icon}) {
-    _overlayState = Navigator.of(context).overlay;
+      {required String title,
+      String? description,
+      int? duration,
+      int? gravity,
+      Color? backgroundColor,
+      IconData? icon}) {
+    _overlayState = Navigator.of(context).overlay!;
 
     if (!_isVisible) {
       _isVisible = true;
@@ -55,7 +57,7 @@ class OverlayView {
       _overlayEntry = OverlayEntry(builder: (context) {
         return EdgeOverlay(
           title: title,
-          description: description,
+          description: description ?? '',
           overlayDuration: duration == null ? EdgeAlert.LENGTH_SHORT : duration,
           gravity: gravity == null ? EdgeAlert.TOP : gravity,
           backgroundColor:
@@ -64,7 +66,7 @@ class OverlayView {
         );
       });
 
-      _overlayState.insert(_overlayEntry);
+      _overlayState?.insert(_overlayEntry!);
     }
   }
 
@@ -78,12 +80,12 @@ class OverlayView {
 }
 
 class EdgeOverlay extends StatefulWidget {
-  final String title;
-  final String description;
-  final int overlayDuration;
-  final int gravity;
-  final Color backgroundColor;
-  final IconData icon;
+  final String? title;
+  final String? description;
+  final int? overlayDuration;
+  final int? gravity;
+  final Color? backgroundColor;
+  final IconData? icon;
 
   EdgeOverlay(
       {this.title,
@@ -99,9 +101,9 @@ class EdgeOverlay extends StatefulWidget {
 
 class _EdgeOverlayState extends State<EdgeOverlay>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Tween<Offset> _positionTween;
-  Animation<Offset> _positionAnimation;
+  late AnimationController _controller;
+  late Tween<Offset> _positionTween;
+  late Animation<Offset> _positionAnimation;
 
   @override
   void initState() {
@@ -111,7 +113,8 @@ class _EdgeOverlayState extends State<EdgeOverlay>
         AnimationController(vsync: this, duration: Duration(milliseconds: 750));
 
     if (widget.gravity == 1) {
-      _positionTween = Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset.zero);
+      _positionTween =
+          Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset.zero);
     } else {
       _positionTween =
           Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset(0.0, 0));
@@ -128,7 +131,7 @@ class _EdgeOverlayState extends State<EdgeOverlay>
   listenToAnimation() async {
     _controller.addStatusListener((listener) async {
       if (listener == AnimationStatus.completed) {
-        await Future.delayed(Duration(seconds: widget.overlayDuration));
+        await Future.delayed(Duration(seconds: widget.overlayDuration ?? 1));
         _controller.reverse();
         await Future.delayed(Duration(milliseconds: 700));
         OverlayView.dismiss();
@@ -161,9 +164,9 @@ class _EdgeOverlayState extends State<EdgeOverlay>
               widget.gravity == 1 ? 20 : 35),
           color: widget.backgroundColor,
           child: OverlayWidget(
-            title: widget.title,
-            description: widget.description,
-            iconData: widget.icon,
+            title: widget.title ?? '',
+            description: widget.description ?? '',
+            iconData: widget.icon ?? Icons.notifications,
           ),
         ),
       ),
@@ -174,7 +177,7 @@ class _EdgeOverlayState extends State<EdgeOverlay>
 class OverlayWidget extends StatelessWidget {
   final String title;
   final String description;
-  final IconData iconData;
+  final IconData? iconData;
 
   OverlayWidget({this.title = '', this.description = '', this.iconData});
 
@@ -214,7 +217,7 @@ class OverlayWidget extends StatelessWidget {
 }
 
 class AnimatedIcon extends StatefulWidget {
-  final IconData iconData;
+  final IconData? iconData;
 
   AnimatedIcon({this.iconData});
 
@@ -224,7 +227,7 @@ class AnimatedIcon extends StatefulWidget {
 
 class _AnimatedIconState extends State<AnimatedIcon>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {

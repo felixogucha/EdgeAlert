@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:edge_alert/edge_alert.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -53,13 +53,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _differentIcon() {
-    EdgeAlert.show(
-      context,
-      title: 'Title',
-      description: 'Description',
-      gravity: EdgeAlert.TOP,
-      icon: Icons.disc_full
-    );
+    EdgeAlert.show(context,
+        title: 'Title',
+        description: 'Description',
+        gravity: EdgeAlert.TOP,
+        icon: Icons.disc_full);
   }
 
   @override
@@ -72,32 +70,31 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _showAlert(true);
               },
               child: Text('From Top'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _showAlert(false);
               },
               child: Text('From Bottom'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _colorfullAlert();
               },
               child: Text('Colorfull Alert'),
             ),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _longDescAlert();
               },
               child: Text('Long Description'),
             ),
-
-             RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 _differentIcon();
               },
